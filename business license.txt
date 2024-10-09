@@ -1,0 +1,448 @@
+business license-PK(columns= start date, expiration date, new size)
+Business License Type (Require inspection, require size)
+Business site [street address-PK-street1, City, zip code(max 10), state, country)
+Inspection  [Inspection type(initial inspection, final inspection) scheduled date, Comments, sequence
+ 
+
+inspection-->status reason(new request, pending, passed, failed, cancelled)
+Business License-->status reason (active, locked, completed, cancelled, expired)
+
+
+
+business license---> Contact N:1 -- referential
+Business license---> Inspection 1:N --type of behavior=Parental
+Business license ---> Business Site N:1 -- referential , restrict delete
+Business license ---> Business License Type N:1 -- referential
+
+
+
+ Model driven app
+
+
+
+
+
+Main form
+Name  --Single line text
+Display name
+Name
+
+Schema name
+carbar_Name
+
+Logical name
+carbar_name
+
+--------
+Display name
+Business License Type --------- Lookup
+
+Schema name
+carbar_BusinessLicenseType
+
+Logical name
+carbar_businesslicensetype
+---------------
+Display name
+Business Site --------Lookup
+
+Schema name
+carbar_BusinessSite
+
+Logical name
+carbar_businesssite
+-----------------------------
+Display name
+Contact----------- Lookup
+
+Schema name
+carbar_Contact
+
+Logical name
+carbar_contact
+-----------------------
+Display name
+Start Date----Date and time date only
+
+Schema name
+carbar_StartDate
+
+Logical name
+carbar_startdate
+----------------------
+Display name
+New Size--------------whole number
+
+Schema name
+carbar_NewSize
+
+Logical name
+carbar_newsize
+-----------------------------
+Display name
+Owner
+
+Schema name
+OwnerId
+
+Logical name
+ownerid
+
+
+____________________________________________
+
+Component 1 column tab Label=Inspections name* = inspectionsTab (For JavaScript)
+-----------------------------
+Generat tab 
+layout= two columns
+add timeline control in Main form and timeline component
+-----------------------------
+subgrid for business licence
+check related records yes--> inspections (business license)  --- default view = active inspections
+---------------
+
+active Business license views
+name	business site	business license type	contact
+
+
+
+__________________________________________________________________
+___________________________________________________________________
+
+BUSINESS SITE main form
+Street Address		Single-line text
+
+Schema name
+carbar_street1
+
+Logical name
+carbar_street1
+----------------------------
+Display name
+City			Single-line text
+
+Schema name
+carbar_city
+
+Logical name
+carbar_city
+
+
+
+----------------------------*
+Display name
+State/Region
+
+Schema name
+carbar_state
+
+Logical name
+carbar_state
+
+
+----------------------------
+Display name
+Zip Code
+
+Schema name
+carbar_zipcode
+
+Logical name
+carbar_zipcode
+
+
+----------------------------
+Display name
+Country
+
+Schema name
+carbar_country
+
+Logical name
+carbar_country
+
+
+----------------------------
+Display name
+Owner
+
+Schema name
+OwnerId
+
+Logical name
+ownerid
+
+Description
+Owner Id
+
+----------------------------
+
+active build site view
+street address		city		zipcode
+
+---------------------
+__________________________________________________________________________
+_____________________________________________________________
+Inspection form and views
+
+Add Inspection type, Permit, Scheduled Date, and Comments columns to the form. Inspection type, Permit, Scheduled Date should be added between Name and Owner, while Comments will be added after the Owner column.
+
+Add the Status Reason column to the header.
+
+Display name
+Name
+
+Schema name
+carbar_Name
+
+Logical name
+carbar_name
+---------------------
+
+Display name
+Inspection Type
+
+Schema name
+carbar_InspectionType
+
+Logical name
+carbar_inspectiontype
+---------------------
+
+Display name
+Business license
+
+Schema name
+carbar_Businesslicense
+
+Logical name
+carbar_businesslicense
+---------------------
+
+Display name
+Scheduled Date
+
+Schema name
+carbar_ScheduledDate
+
+Logical name
+carbar_scheduleddate
+---------------------
+
+Display name
+Owner
+
+Schema name
+OwnerId
+
+Logical name
+ownerid
+---------------------
+
+
+Display name
+Comments
+
+Schema name
+carbar_Comments
+
+Logical name
+carbar_comments
+
+---------------------
+Active Inspections view.
+
+name Permit, Inspection Type, Scheduled Date, Owner, and Sequence
+
+CUSTOM VIEW - Inspectors View
+name Permit, Inspection Type, Scheduled Date,  Sequence
+
+
+sort by sequence
+
+edit filters
+if  Status Reason equals Pending 
+and owner equals current user
+------------------
+
+ Permit Type form and view
+Display name
+Name
+
+Schema name
+carbar_Name
+
+Logical name
+carbar_name
+
+Display name
+Require Inspection
+
+Schema name
+carbar_RequireInspection
+
+
+Logical name
+carbar_requireinspection
+Require Size
+
+Schema name
+carbar_RequireSize
+
+Logical name
+carbar_requiresize
+
+----------------------------
+Active Permit Types view.
+Require Inspections and Require Size to the view.
+
+Remove Created On
+
+
+
+
+
+Create madel driven app
+business license management
+area1= business license department
+new group=Licenses Department
+tables= business licences
+	business license types
+	inspection
+new grpou= contacts
+tables= contact
+	business site
+
+
+
+
+
+
+
+Power automate flow
+Reset Licenses
+
+New business site
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-------------------------
+------------------------------
+-----------------------
+Canvas app
+
+app name = survey
+
+
+
+Schedules date powerfx formula = DateValue(Text(ThisItem.'Scheduled Date'),"en")
+
+
+
+
+Submit button formula     SubmitForm(InspectionForm);Back(ScreenTransition.UnCoverRight);
+OnSelect of inspection list Navigate('Details Screen',ScreenTransition.Cover);
+
+
+
+
+to be the current user. first add data source office365users and add this onstart Set(currentuser,Office365Users.MyProfile())
+
+currentuser.Country
+
+Patch for status reason failed button = Patch(Inspections,'Inspection List'.Selected, {'Status Reason':'Status Reason (Inspections)'.Failed});Back(ScreenTransition.UnCoverRight);
+
+
+
+
+RGBA(100, 100, 100, 1)
+
+RGBA(0, 18, 107, 1)
+Color.Gainsboro
+
+RGBA(135, 114, 114, 100) brown grey
+RGBA(8, 10, 51, 100) very very dark bleu
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+----------------------------------
+powerplatformcli   Get-Command pac | Format-List
+dotnet tool install --global Microsoft.PowerApps.CLI.Tool
+
+pac
+
+file location 	%USERPROFILE%\.dotnet\tools
+
+
+dotnet tool update --global Microsoft.PowerApps.CLI.Tool
+
+
+pac tool list
+
+launch configuration migration tool
+pac tool cmt 
+
+
+
+
+
+ configuration 
+
+Imported the data from business license type and business site to zip for inporting to production env
+
+
+
+
+install xrmtoolbox
+
+unblock before extraction
+
+install fetchxml(Jonas rapp) and early bound generator (daryl labar)
+
+
+also installed auto number manager(Jonas rapp)
+easy translator (mscrm tools)
+
+
+
+creat a new connection with the cb dev env called 'Dev'
+
+filter when statuscode equals new request 
+and when statuscode equals pending
+
+view fetchxml
+execute f5 
+convert powerautomate parameters
+
+
+fetchxml filter query == (statuscode eq 1 or statuscode eq 666660001)
+
+
+dev environment
+https://org91bb764d.crm4.dynamics.com
+
+
+/main.aspx?appid=2ce51c2c-c469-ef11-a670-000d3a219eb6&pagetype=entitylist&etn=carbar_businesslicense&viewid=2c11753e-ae4e-4940-b191-cc6ab008a220&viewType=1039
